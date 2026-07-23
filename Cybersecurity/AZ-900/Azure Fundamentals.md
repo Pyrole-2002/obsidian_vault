@@ -167,4 +167,25 @@ Azure App Service allows you to define custom containers for Windows or Linux to
 	- Linked authentication provides the ability to link multiple accounts from different identity providers to a single user identity. This allows users to authenticate using any of their linked accounts.
 	- Integrated Windows Authentication (IWA) lets users access apps using their Windows domain creds, utilizing their current Windows session for auth.
 	- Header based auth is the method in which app accepts an auth token in the form of a header in each request. The token in validated by the app to authenticate the user.
-- 
+## Zero Trust Methodologies
+- The zero trust model operates on the principle of *"Trust No One, Verify Everything"*.
+- The 3 principles of Microsoft's Zero Trust Model:
+	1. **Verify Explicitly:** Always authenticate and authorize based on all available data points.
+	2. **Least Privileged Access:** Principle of Least Privilege (PoLP), limit user access with Just-In-Time (JIT) and Just-Enough-Access (JEA), risk based adaptive policies and data protection.
+	3. **Assume Breach:** Minimize blast radius and segment access. Verify end-to-end encryption and use analytics to get visibility, drive threat detection and improve defenses.
+- The 6 pillars of Microsoft's Zero Trust Model:
+	1. Identities
+	2. Endpoints (Devices)
+	3. Apps
+	4. Data
+	5. Infrastructure
+	6. Networks
+## Key Vault
+- Azure Key Vault helps you safeguard cryptographic keys and other secrets used by cloud apps and services.
+- Secrets Management: Store and tightly control access to tokens, passwords, certificates, API keys, and other secrets.
+- Key Management: Create and control the encryption keys used to encrypt your data.
+- Certificate Management: Easily provision, manage, and deploy public and private SSL certificates for use with Azure and internal connected resources.
+- Hardware Security Module: An HSM is a piece of hardware designed to store encryption keys. Secrets and keys can be protected either by software or FIPS 140-2 Level 2 validated HSMs.
+  HSMs that are multi-tenant are FIPS 140-2 Compliant (multiple customers virtually isolated on an HSM).
+  HSMs that are single-tenant are FIPS 140-3 Compliant (single customer on a dedicated HSM).
+## Azure DDoS Protection
