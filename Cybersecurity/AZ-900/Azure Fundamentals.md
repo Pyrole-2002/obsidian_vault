@@ -189,3 +189,44 @@ Azure App Service allows you to define custom containers for Windows or Linux to
   HSMs that are multi-tenant are FIPS 140-2 Compliant (multiple customers virtually isolated on an HSM).
   HSMs that are single-tenant are FIPS 140-3 Compliant (single customer on a dedicated HSM).
 ## Azure DDoS Protection
+- DDoS (Distributed Denial of Service) Attack is a malicious attempt to disrupt normal traffic by flooding a website with large amounts of fake traffic.
+- Volumetric Attacks:
+	- Volume based attacks that flood the network with legitimate looking traffic.
+	- Exhausts available bandwidth.
+	- Legitimate uses cannot access website.
+	- Measured in bits per second (bps).
+- Protocol Attacks:
+	- Exhausting server resources with false protocol requests that exploit weakness (UDP and TCP flooding on Layer 3 and Layer 4).
+	- Measured in packages per second (psp).
+- Application Layer Attacks:
+	- Attacks that occur at the application layer (Layer 7).
+	- HTTP floods, SQL injections, cross-site scripting (XSS), parameter tampering, Sowloris Attacks.
+	- Web Application Firewalls (WAFs) are used as means of protection.
+## Azure Firewall
+- Azure Firewall is a managed, cloud based network security service that protects your Azure VNet resources.
+- It is a fully stateful Firewall as a Service (FWaaS) with built in high availability and unrestricted cloud scalability.
+- You can centrally create, enforce and log app and network connectivity policies across subscriptions and virtual networks.
+- Azure Firewall uses a static public IP address for your VNet resources allowing outside firewalls to identify traffic originating from your virtual network. The service is fully integrated with Azure Monitor for logging and analytics.
+- Azure Firewall is launched in its own VNet. Other VNets pass through this central VNet. It allows Microsoft Threat Intelligence, blocks known malicious IPs and FQDNs.
+## Azure Application Gateway
+- It's an application level routing and load balancing service.
+- Operates on Layer 7 (Application Layer).
+- Azure Web Application Firewall (WAF) policies can be attached to an Application Gateway to provide additional security.
+- Configuring frontend:
+	- Private IP will create an Internal Load Balancer.
+	- Public IP will create an External Load Balancer.
+- Configuring backend:
+	- Need to create backend pools.
+	- A backend pool is a collection of resources to which your app gateway can send traffic.
+	- A backend pool can contain:
+		- VMs
+		- VM scale sets
+		- IP addresses
+		- Domain names
+		- App Service
+- Configuring routing rules:
+	- Listeners list incoming traffic and pass it to rules.
+	- Rules say who should we pass data to.
+	- HTTP/S settings say how we should handle HTTP requests.
+### Routing Rules
+- 
