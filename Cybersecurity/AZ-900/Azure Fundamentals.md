@@ -229,4 +229,108 @@ Azure App Service allows you to define custom containers for Windows or Linux to
 	- Rules say who should we pass data to.
 	- HTTP/S settings say how we should handle HTTP requests.
 ### Routing Rules
-- 
+- A Listener "listens" on a specified port and IP address for traffic that uses a specified protocol. If the listener criteria are met, the application gateway will apply this routing rule.
+- There are 2 types of listeners:
+	- Basic listeners forward all requests for any domain to backend pools.
+	- Multi-site listeners forward requests to different backend pools based on host header and host name.
+- Requests are matched according to the order of rules and the type of listener. Add basic listeners at last otherwise it will capture all requests.
+- **Backend targets:** chooses where a route should go either Backend Pool or Redirection.
+- **HTTP Settings:** To create a rule for backend pool you need to create HTTP Setting. This allows to define how we want to handle cookies, connection draining, port request timeout.
+- **Backend Port:** The port where the backend server listens to incoming traffic.
+- **Cookie based affinity:** Use cookies to keep a user session on the same server.
+- Connection draining gracefully removes backend pool members during planned service updates.
+- **Request Timeouts:** The number of seconds that the application gateway will wait to receive a response from the backend pool before it returns a connection timed out error message.
+- Override backend path allows you to override the path in the URL so that the requests for a specific path can be routed to another path.
+- **Override Hostname:** Multi-tenant services like app service or API management rely on a specific host header or SNI extension to resolve to the correct endpoint. Change these settings to overwrite the incoming HTTP host header.
+## Azure Role-Based Access Control (RBAC)
+- Azure RBAC helps manage who has access to Azure resources, what they can do with those resources, and what areas they have access to.
+- A role assignment consists of 3 elements:
+	1. **Security Principal** represents the identities requesting access to an Azure resource such as:
+		- User: An individual who has a profile in Azure AD.
+		- Group: A set of users created in Azure AD.
+		- Service Principal: A security identity used by applications or services to access specific Azure resources.
+		- Managed Identity: An identity in Azure AD that is automatically managed by Azure.
+	2. **Role Definition** is a collection of permissions. It lists the operations that can be performed, such as read, write, and delete. Roles can be high-level, like owner, or specific, like VM reader.
+	3. **Scope** defines the specific set of resources that a Role Assignment grants access to.
+- There are 4 fundamental Azure roles.
+
+|                       | **READ** | **GRANT** | **CREATE, UPDATE, DELETE** |
+| --------------------- | -------- | --------- | -------------------------- |
+| **OWNER**             | Yes      | Yes       | Yes                        |
+| **CONTRIBUTOR**       | Yes      | No        | Yes                        |
+| **READER**            | Yes      | No        | No                         |
+| **USER ACCESS ADMIN** | No       | Yes       | No                         |
+- Azure RBAC includes over 70 built-in roles.
+### Azure Management Groups
+- Manage multiple subscriptions (accounts) into a hierarchical structure.
+- Each directory is given a single top-level management group called the "Root" management group.
+- All subs within a management group automatically inherit the conditions applied to the management group.
+![[Pasted image 20260726004327.png|700]]
+### Database Services
+- **Azure Cosmos DB:** A fully managed NoSQL dbs. Designed for scale with guarantee of 99.999% (5 nines) availability.
+- **Azure SQL DB:** Fully managed MSSQL dbs with auto scale, integral intelligence, and robust security.
+- **Azure DB for MySQL/PSQL/MariaDB:** Fully managed and scalable dbs with high availability and security.
+- **SQL Server on VMs:** Host enterprise SQL server apps in the cloud. Lift-and-Shift MSSQL servers from on-premise to Azure Cloud.
+- **Azure Synapse Analytics (Azure SQL Data Warehouse):** Fully managed data warehouse with integral security at every level of scale at no extra cost.
+- **Azure DB Migration Service:** Migrates your dbs to the cloud with no app code changes.
+- **Azure Cache for Redis:** Caches frequently used and static data to reduce data and app latency.
+- **Azure Table Storage:** Wide-column NoSQL store that hosts unstructured data independent of any schema.
+### Application Integration Services
+- **Azure Notifications Hub:** Pub/Sub, send push notifs to any platform from any backend.
+- **Azure API Apps:** API gateway, quickly build and consume APIs in the cloud. Route APIs to Azure Services.
+- **Azure Service Bus:** Reliable cloud Messaging as a Service (MaaS) and simple hybrid integration.
+- **Azure Stream Analytics:** Serverless real-time analytics, from the cloud to the edge.
+- **Azure Logic Apps:** Schedule, automate and orchestrate tasks, businesses, processes and workflows. Integration with Enterprise SaaS and Enterprise apps.
+- **Azure API Management:** Hybrid, multi-cloud management platform for APIs across all environments. Put in-front of existing APIs to add additional functionality.
+- **Azure Queue Storage:** Messaging Queue. A data store for queuing and reliably delivering messages between apps.
+### Developer Tools
+- **Azure SignalR Service:** Real-time messaging, easily add real-time web functionality to apps.
+- **Azure App Service:** Easy to use service for deploying and scaling web apps with .NET, Node.js, Java, Python and PHP. Developer focus on building their web apps, and do not worry about underlying infrastructure.
+- **Visual Studio:** Code editor, the integrated dev environment (IDE) designed for creating powerful and scalable apps for Azure.
+- **Xamarin:** Mobile-app framework, create powerful and scalable native mobile apps with .NET and Azure.
+### Azure DevOps Services
+- **Azure Boards:** Deliver value to your users faster using proven agile tools to plan, track and discuss work across your teams.
+- **Azure Pipelines:** Build, test and deploy with CI/CD that works with any language, platform, and cloud. Connect GitHub or any other Git provider and deploy continuously.
+- **Azure Repos:** Get unlimited, cloud-hosted, private Git repos and collaborate to build better code with pull requests and advanced file management.
+- **Azure Test Plans:** Test and ship with confidence using manual and exploratory testing tools.
+- **Azure Artifacts:** Create, host, and share packages with your team, and add artifacts to CI/CD pipelines with a single click.
+- **Azure DevTest Labs:** Fast, easy, and lean dev-test environments.
+### Cloud Native Networking Services
+- **Azure DNS:** Provides ultra-fast DNS responses and ultra-high domain availability.
+- **Azure Virtual Network (vNET):** A logical isolated section of the Azure network for customers to launch Azure resources within.
+- **Azure Load Balancer:** OSI Level 4 (Transport) Load balancer.
+- **Azure Application Gateway:** OSI Level 7 (HTTP) Load balancer, can apply a web app firewall.
+- **Network Security Groups:** A virtual firewall at the subnet level.
+### Enterprise/Hybrid Networking Services
+- **Azure Front Door:** Scalable and secure entry point for fast delivery of your global apps.
+- **Azure Express Route:** A connection between your on-premise to Azure cloud from 50 Mbps to 10 Gbps.
+- **Virtual WAN:** A networking service that brings many networking, security, and routing functionalities together to provide a single operational interface.
+- **Azure Connection:** A VPN connection securely connects two Azure local network via IPsec.
+- **Virtual Network Gateway:** A site-to-site VPN connection between an Azure vnet and your local network.
+### Azure Traffic Manager
+- Operates at the DNS layer to quickly and efficiently direct incoming DNS requests based on the routing method of your choice.
+- Route traffic to servers that are geographically near by to reduce latency.
+- Failover to redundant systems incase primary systems become unhealthy.
+- Route to random VM to simulate A/B testing.
+### Big Data and Analytics Services
+- Big Data is a term used to describe massive volumes of structure/unstructured data that is so large it is difficult to move and process using traditional database and software techniques.
+- **Azure Synapse Analytics:** Enterprise data warehousing and big data analytics. Intended to run SQL queries against large dbs for reporting.
+- **HDInsight:** Run open-source analytics software such as Hadoop, Kafka and Spark.
+- **Azure Databricks:** An Apache Spark based analytics platform optimized for Azure cloud services platform. Third-party Databricks cloud services supported within Azure.
+- **Data Lake Analytics:** An on-demand analytics job service that simplifies big data. A data lake is a storage repo that holds a vast amount of raw data in its native format until it is needed.
+### Serverless Services
+- When the underlying servers, infrastructure and OS is taken care of by the Cloud Service Provider (CSP), it will generally be highly available, scalable and cost effective.
+- A serverless function has event driven scale that can be triggered or trigger other events allowing you to compose complex apps.
+- Servers are abstracted away. Your code is described as functions. These funcs can be running on different compute instances.
+- Micro-billing because serverless compute could run for a fraction of a second. Billing into micro seconds will save money.
+- **Azure Functions:** Run small amounts of code known as serverless funcs in your favorite language: C#, Java, JS, Python and Powershell.
+- **Blog Storage:** Serverless object storage, just upload files, don't think about the underlying filesystems or resizing.
+- **Logic Apps:** Allows you to build serverless workflows composed of Azure funcs. Building state machines for serverless compute.
+- **Event Grid:** Uses Pub/Sub messaging system to allow you to react to events and trigger other Azure cloud services such as Azure funcs.
+### Azure Policies
+- Azure Policy enforce organizational standards and to assess compliance at scale. Policies do not restrict access, they only observe for compliance.
+- A policy definition is a JSON file used to describe business rules to control access to resources.
+- Policy assignment is the scope the policy can affect. Assigned to a user, a resource group or management group.
+- Policy parameters are values you can pass into your policy definition so your policies are more flexible for reuse.
+- Initiative definition is a collection of policy definitions that you can assign, e.g. a group of policies to enforce PCI-DSS compliance.
+### Resource Locks
