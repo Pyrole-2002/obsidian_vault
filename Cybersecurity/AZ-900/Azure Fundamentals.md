@@ -334,3 +334,6 @@ Azure App Service allows you to define custom containers for Windows or Linux to
 - Policy parameters are values you can pass into your policy definition so your policies are more flexible for reuse.
 - Initiative definition is a collection of policy definitions that you can assign, e.g. a group of policies to enforce PCI-DSS compliance.
 ### Resource Locks
+- As an admin, you can lock a subscription, resource group or resource to prevent other users from accidentally deleting or modifying critical resources.
+- **CanNotDelete:** Authorized users can still read and modify a resource, but they can't delete the resource.
+- **ReadOnly:** Authorized users can read a resource, but they can't delete or update the resource.
