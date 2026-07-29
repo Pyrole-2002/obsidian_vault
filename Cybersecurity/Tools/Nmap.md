@@ -3,21 +3,39 @@
 ```bash
 nmap [scan type] [options] [target]
 ```
+- Timing Templates
+	- `-T0` to `-T5` : Timing presets to control scan speed, packet delay and timeout aggressiveness. By default you should use `-T4`.
+- Host Discovery
+	- `-sn` : No Port Scan: Performs a ping sweep, identifies live hosts without scanning ports.
+	- `-Pn` : Skip Host Discovery: Treat all target IPs as online and skip [[ICMP]] pings. Essential when target firewalls block ping requests.
+	- `-PS [ports]` : TCP SYN Ping: Sends a SYN packet to specified ports (default: 80) to check if a host is responsive.
+	- `-PA [ports]` : TCP ACK Ping: Sends an ACK packet to test if a host responds with an RST packet.
+	- `-PU [ports]` : UDP Ping: Sends empty UDP packets to determine host availability.
 - Scan Types
-	- By default, if you run nmap with sudo, it uses Stealth SYN scan (-sS). If you run it without sudo, it uses a Connect scan (-sT).
+	- `-A` : Aggressive Scan: Combines OS detection, version detection, default scripts and traceroute into a single flag.
+	- By default, if you run nmap with sudo, it uses Stealth SYN scan (-sS) and grants access to raw sockets, enabling stealthier scan types like SYN scans and OS fingerprinting.
+	- If you run it without sudo, it uses a Connect scan (-sT).
 	- `-sS` : Stealth SYN Scan: Sends a SYN packet, gets a SYN/ACK, but tears down the connection before completing the [[TCP]] handshake. It is fast and slightly stealthier.
 	- `-sT` : TCP Connect Scan: Completes the full TCP handshake. Slower and more likely to be logged by the target's firewall/IDS (Intrusion Detection System).
 	- `-sU` : [[UDP]] Scan: Scans for UDP ports like (DNS or [[SNMP]]).
-- Port Specifications
+	- `-sA` : TCP ACK Scan: Used to map firewall rules rather than find open ports. Determines whether ports are filtered or unfiltered.
+	- `-sN` / `-sF` / `-sX` : NULL/FIN/Xmas: Sets specific TCP flag combinations (No flags, FIN flag, FIN+PSH+URG flags). Used to probe non-RFC compliant systems or bypass older stateless firewalls.
+- Port Specification
 	- By default, nmap scans the top 1000 most common ports.
-	- `-p` : Scan specific ports: `-p 80,443,445`.
-	- `-p-` : Scan all ports: `nmap -p- 192.168.199.130`.
+	- `-p <range>` : Scan specific ports: `nmap -p 80,443,8080-8090 192.168.199.130`.
+	- `-p-` : Scan all 65535 ports: `nmap -p- 192.168.199.130`.
 	- `-F` : Fast scan: Scans only the top 100 most common ports.
+	- `-r` : Consecutively scans ports sequentially instead of randomized.
 - Enumeration
 	- `-sV` : Version detection: Probes open ports to determine service and version info.
 	- `-O` : OS detection: Guesses the target's OS by analyzing how its network stack responds to odd packets.
 	- `-sC` : Default scripts: Runs nmap's default set of vulnerability and discovery scripts, Nmap's Scripting Engine (NSE) against the target.
+	- `--osscan-guess` : Aggressive OS Guessing: Forces nmap to make a guess estimate if OS fingerprinting is inconclusive.
 - Output
 	- `-oN` : Normal output: Saves the scan exactly as it looks on your screen to a text file.
 	- `-oX` : XML output: Saves as XML which can be imported into tools like [[Metasploit]].
 	- `-oA` : All formats: Saves the scan in Normal, XML and Greppable formats.
+- Evasion and Spoofing
+	- `-f` : Fragments IP packets into small headers to hinder packet-inspection firewalls.
+	- `-D <decoy1,decoy2>` : Sends scans from spoofed decoy IP addresses alongside your real IP to mask origin.
+	- `-g <port>` : Forces nmap to send packets from a specific source port to bypass basic ACLs.
