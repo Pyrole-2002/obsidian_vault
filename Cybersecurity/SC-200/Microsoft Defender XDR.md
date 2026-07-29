@@ -45,3 +45,6 @@
 	- Protect against cyberthreats and anomalies.
 	- Assess the compliance of your cloud apps.
 - Shadow IT is the use of software, hardware, or cloud services inside a company without the knowledge or approval of the official IT department.
+##  MS Defender for Endpoint
+- It is a platform designed to help enterprise networks prevent, detect, investigate, and respond to advanced threats on their endpoints.
+![[Pasted image 20260729215408.png|866]]

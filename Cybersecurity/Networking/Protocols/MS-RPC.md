@@ -1,0 +1,6 @@
+- It is a type of Inter Process Communication (IPC) protocol.
+- It allows a client program to request a service or invoke a function on a remote computer across a network as if the procedure was local.
+- The protocol is designed so the programmer or user does not need to understand the complex, low-level network details of the remote machine to execute the command.
+- MS-RPC Integration: In Microsoft and Windows environments, MS Remote Procedure Call (MS-RPC) is heavily used to manage services, tasks, printers, and user data.
+- MS-RPC services can be transported over plain [[TCP]]/[[UDP]] or very commonly through a network [[SMB]] (Server Message Block) pipe on ports 139 and 445.
+- When transported over SMB, RPC services are accessed through "named pipes" (like `/pipe/lsarpc` or `/pipe/samr`) via a hidden network share known as `IPC$`.
