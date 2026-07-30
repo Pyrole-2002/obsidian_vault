@@ -22,7 +22,7 @@ msfconsole
 | `search <term>`                | Search modules. `search eternalblue`                                                         |
 | `use <module_path>`            | Select a module. `use exploit/windows/smb/ms17_010_eternalblue`                              |
 | `info`                         | Display module information.                                                                  |
-| `show options`                 | Show required/optional module options.                                                       |
+| `options`                      | Show required/optional module options.                                                       |
 | `show payloads`                | Compatible payloads for the current exploit.                                                 |
 | `set <OPTION> <value>`         | Set an option. `set RHOSTS 192.168.1.10`                                                     |
 | `setg`                         | Set a global option (persists across modules).                                               |
