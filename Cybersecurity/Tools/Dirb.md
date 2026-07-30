@@ -3,6 +3,7 @@
 - It works by launching a dictionary based attack against a web server, taking a list of common directory and file names, appending them to a target URL, and analyzing the response codes.
 ```bash
 dirb <url_base> [<wordlist_file(s)>] [options]
+dirb
 ```
 - If  you do not specify a wordlist, `dirb` automatically uses its default list.
 - By default, it is recursive. If it finds a valid directory, it will automatically start a brand new scan inside that directory using the same wordlist.
