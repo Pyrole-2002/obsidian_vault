@@ -2,6 +2,10 @@
 - Generative AI creates original content, such as GenAI that has been built into chat apps. GenAI apps take in natural language input, and return appropriate responses in a variety of formats.
 - GenAI apps are powered by LLMs which are a specialized type of ML model that you can use to perform NLP tasks.
 - Copilots are often integrated into other apps and provide a way for users to get help with common tasks from a GenAI model.
+- Copilot is deeply embedded into the Defender XDR incident queue. It acts as an intelligent orchestrator, instantly summarizing complex multi-stage attacks and translating obscure, obfuscated PowerShell scripts into natural language explanations.
+- **Compute Billing Architecture (SCU):** Security Copilot is governed by Security Compute Units (SCU). Microsoft announced that MS 365 E5 and E7 license holders receive an embedded capacity of 400 SCUs per month for every 1000 paid user licenses, capped at an upper limit of 10000 SCUs.
+- **Provisioned vs. Overage Models:** For orgs requiring dedicated capacity beyond the E5 inclusion, SCUs can be purchased. Provisioned SCUs are billed hourly at a flat rate, regardless of utilization. Overage SCUs are consumed on-demand and billed fractionally to handle unexpected workload surges during major incident response engagements.
+- **Analyst Efficiency Metrics:** Empirical data indicates that leveraging copilot reduces Mean Time to Respond (MTTR) dramatically. Orgs report up to a 68% decrease in the probability of an incident reopening and a 22% decrease in the number of subsequent alerts generated per incident, as copilot enables analysts to identify the root cause earlier in the kill chain.
 ### Azure OpenAI
 - It is Microsoft's cloud solution for deploying, customizing, and hosting LLMs.
 - It consists of:
