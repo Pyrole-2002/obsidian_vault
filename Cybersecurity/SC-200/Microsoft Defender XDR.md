@@ -15,6 +15,12 @@
 ![[Pasted image 20260727171504.png|856]]
 # Threat Protection with Microsoft Defender XDR (Extended Detection & Response)
 ![[Pasted image 20260727192525.png|1221]]
+- Incident response leverages specialized Defender products:
+	- **MS Defender for Identity (MDI):** Protects on-premise AD infra. It utilizes sensors installed directly on DCs to detect lateral movement techniques such as Pass-the-Ticket, Golden Ticket, and remote SAMR enumeration. If an identity is compromised on-premises, analysts can utilize Defender XDR to instantly "Disable User", isolating the threat at the directory level.
+	- **MS Defender for Cloud Apps (MDA):** Governs Software-as-a-Service (SaaS) environments and Shadow IT. In the event of a malicious OAuth app compromise or bulk data exfiltration, MDA can automatically revoke OAuth consent and invalidate user sessions in Entra ID to sever the attacker's connection.
+	- [[Microsoft Purview|MS Purview:]] Utilized heavily for investigating insider risks and data loss compliance violations. If Purview Data Loss Prevention (DLP) flags an incident, analysts navigate to the incident details to determine the specific sensitivity labels and information types exposed during the event.
+	- **MS Entra ID Protection:** Evaluates sign-in and user risk based on behavioral telemetry, identifying scenarios such as impossible travel or leaked credentials. It dynamically enforces adaptive access policies to remediate compromised identities autonomously.
+	- **Defender for Cloud:** Provides cloud workload protection from Azure, AWS, and GCP resources. Analysts must investigate alerts originating from Kubernetes control planes, SQL dbs, and VM instances, often utilizing [[Microsoft Sentinel]] to cross correlate these alerts with network telemetry.
 ## Threat Investigation with MS Graph Security API
 - The MS Graph Security API is an intermediary service (broker) that provides programmatic connections to multiple MS Graph Security Providers.
 - It is a RESTful web API. After you register your app and get authentication tokens for a user or service, you can make requests to the MS Graph API.
@@ -27,6 +33,10 @@
 - This is a query based threat-hunting tool that lets you explore up to 30 days of raw data.
 - You can proactively inspect events in your network to locate threat indicators and entities.
 - The flexible access to data enables unconstrained hunting for both known and potential threats.
+- `DeviceEvents`, `DeviceProcessEvents`, `DeviceNetworkEvents`: Contains raw endpoint telemetry from Defender for Endpoint.
+- `EmailEvents`, `EmailAttachmentInfo`, `EmailPostDeliveryEvents`: Contains routing and attachment data from Defender for Office 365.
+- `IdentityLogonEvents`, `IdentityQueryEvents`: Contains authentication and directory querying data from Defender for Identity and Entra ID.
+- `CloudAppEvents`: Contains SaaS application telemetry from Defender for Cloud Apps.
 ```sql
 --// MITRE ATT&CK: T1048 - Exfiltration Over Alternative Protocol
 --// Purpose: Detect bulk sensitive file activity in Microsoft Teams indicating potential data exfiltration
@@ -46,6 +56,28 @@ CloudAppEvents
 | where FileCount > messageThreshold
 --// Projecting specific columns ensures the Custom Detection engine maps the entities correctly
 | project Timestamp, AccountName, IPAddress, FileCount, FileNames
+```
+## Threat Analytics & Hunting Graphs
+- The Threat Analytics portal in Defender XDR provides detailed reports authored by MS Security researchers covering emerging threat campaigns, Advanced Persistent Threat (ATP) groups, and novel vulnerabilities.
+- These reports include pre-built advanced hunting queries that analysts can instantly run to check their environment for exposure.
+- Hunting graphs allow analysts to visually map the blast radius of an attack. By joining identity tables with device tables via [[Microsoft Sentinel#Kusto Query Language (KQL)|KQL]], the analyst can trace exactly which servers a compromised admin account authenticated to during a specified timeframe, revealing the full scope of lateral movement.
+```sql
+--// MITRE ATT&CK: T1078 - Valid Accounts
+--// Purpose: Trace lateral movement blast radius by linking compromised identities to device logons
+let compromisedIdentity = "admin_jdoe";
+let timeFrame = ago(7d);
+IdentityLogonEvents
+| where Timestamp >= timeFrame
+| where AccountName == compromisedIdentity
+| where ActionType == "LogonSuccess"
+--// Join with DeviceNetworkEvents to see what outbound connections those machines made shortly after logon
+| join kind=inner (
+    DeviceNetworkEvents
+    | where Timestamp >= timeFrame
+    | where RemoteIPType == "Public"
+) on DeviceId
+| project Timestamp, AccountName, DeviceName, RemoteIP, RemoteUrl, ActionType
+| sort by Timestamp desc
 ```
 ## Entra ID Sign-in Logs
 - When hunting Entra ID sign-in logs using Kusto Query Language (KQL), the table names are different based on where you access the logs.
@@ -210,6 +242,7 @@ Inventory Summary:
 	- Classifies APIs that receive or respond with sensitive data.
 
 ##  MS Defender for Endpoint (MDE)
+- MDE affords analysts the capability to perform surgical containment and forensic evidence gathering on remote machines without alerting the adversary.
 - MDE settings govern the sensor behavior on individual machines across the enterprise.
 - Advanced features must be configured to enable modern response capabilities, such as remote forensic collections and automated threat remediation.
 - It is a platform designed to help enterprise networks prevent, detect, investigate, and respond to advanced threats on their endpoints.
@@ -302,6 +335,25 @@ Add-MpPreference -AttackSurfaceReductionOnlyExclusions "C:\LegacyApp\finance_mac
 Get-MpPreference | Select-Object AttackSurfaceReductionRules_Ids, AttackSurfaceReductionRules_Actions
 ```
 ### Investigation
+#### Live Response & Investigation Packages
+- Live Response provides a powerful remote cli directly to an endpoint. To utilize this capability, the machine must be running a supported OS and Live Response must be explicitly enabled in the MDE Advanced Features settings.
+- Initiating a Live Response Session:
+	- Navigate to the ***MS Defender Portal***.
+	- Select ***Assets>Devices*** and search for the target compromised endpoint.
+	- In the device menu, select ***Initiate Live Response Session***.
+	- A console window will open, establishing a secure connection to the machine.
+
+| Command     | Operational Description                                                                                                      | Execution Constraints & Limits                                                                              |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `getfile`   | Retrieves a file from the remote device down to the analyst's local machine for offline malware reverse-engineering.         | The maximum file size limit for extraction is **3 GB**. Virtual files or reparse points are not supported.  |
+| `putfile`   | Drops a file (e.g., a custom forensic scanning executable) from the central tenant library to the target endpoint.           | Files are saved to a temporary working directory and are securely deleted automatically upon system reboot. |
+| `library`   | Lists the custom scripts and binaries currently available in the tenant's Live Response repository.                          | The total cumulative library size limit is **250 MB**.                                                      |
+| `run`       | Executes a PowerShell script uploaded to the library on the target device. Parameters can be passed inline.                  | The session forcefully times out after **10 minutes** of script execution.                                  |
+| `remediate` | Attempts to forcefully stop a malicious process, delete a file, remove a scheduled task, or wipe a registry persistence key. | Remediation actions vary dynamically based on the target entity type                                        |
+
+- For intensive, long running commands (such as a full memory dump), analysts can append an `&` to send the command to the background, allowing the analyst to continue executing other commands concurrently.
+- Using the `fg` command will bring the background process back to the foreground upon completion.
+- For extensive forensic triage, analysts can trigger the collection of an Investigation Package. This automated action pulls a predefined set of artifacts, including process lists, active network connections, autorun configs, and system event logs, compiling them into a downloadable ZIP archive directly form the device page. Linux troubleshooting relies on downloading and executing the Python or binary-based Client Analyzer (`mde_support_tool.sh` or `MDESupportTool`) to generate diagnostic logs.
 #### Automated Investigation & Response (AIR)
 - MS Defender utilizes device groups to apply specific automation levels to clusters of endpoints.
 - By segregating machines logically, orgs can dictate whether threats are remediated automatically or require manual SOC approval.

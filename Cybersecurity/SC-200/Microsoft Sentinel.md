@@ -348,6 +348,28 @@ EmailEvents
 ---
 # Microsoft Sentinel
 - MS Sentinel is the centralized Security Information and Event Management (SIEM) and Security Orchestration, Automation, and Response (SOAR) platform.
+- Sentinel significantly expands the hunting timeline beyond XDR's 30 day limitation, enabling deep historical analysis over months or years of data.
+- **Summary Rules**
+	- Querying TBs of raw network, firewall or proxy logs over long periods is exceptionally slow and computationally expensive.
+	- Analytics rules relying on massive datasets frequently time out, causing the system to auto-disable the rule. Summary rules solve this architectural bottleneck by aggregating high volume logs at the point of ingestion, calculating summary stats, and writing the distilled results into a Custom Log (`_CL`) table.
+	- Creating a Summary Rule:
+		1. Navigate to ***MS Sentinel>Configuration>Summary Rules***.
+		2. Select ***+Create*** to open the wizard.
+		3. Name the rule.
+		4. Write the KQL aggregation logic.
+		5. Specify the destination custom table.
+		6. Set the scheduling frequency, review the diagnostic settings prompt to ensure tracking of run failures, and save the rule.
+```sql
+--// Example: Summary Rule Logic aggregating Firewall logs to detect massive data transfers
+let csl_columnmatch=(column_name: string) {
+    summarized_CommonSecurityLog
+    | where isnotempty(column_name)
+    | extend Date = format_datetime(TimeGenerated, "yyyy-MM-dd")
+    --// Aggregating connection counts and bytes reduces billions of rows to mere thousands
+    | summarize ConnectionCount = count(), TotalBytes = sum(SentBytes) by SourceIP, DestinationIP, DestinationPort
+};
+--// The output of this query is continuously written to the specified _CL table for fast, cheap alerting.
+```
 - MS Sentinel architecture emphasizes multi-tier data logging to control ingestion and retention costs while seamlessly maintaining massive telemetry volumes for AI modeling.
 - Automation is divided into 2 distinct components:
 	- Automation Rules: Provide lightweight, built-in logic to triage incidents automatically, such as changing an incident's severity, assigning it to a specific analyst tier, or adding contextual tags based on the alert's properties.
@@ -442,6 +464,21 @@ EmailEvents
 - **SecurityIncident:** Alerts can generate incidents. Incidents are related to alerts.
 - **ThreatIntelligenceIndicator:** Contains user-created or data connector ingested indicators such as file hashes, IP addresses, domains.
 - **Watchlist:** A sentinel watchlist contains imported data.
+### KQL Search Jobs in the Data Lake
+- When an analyst needs to hunt through the massive Data Lake (Cold Tier), when investigating a dormant backdoor implanted 14 months ago, standard interactive queries will likely time out.
+- Instead, the analyst executes a Search Job. This triggers an asynchronous backend process that scans the long-term retention data.
+- The results of the search are deposited into a temp, restorable table ending with the suffix `_SRCH`.
+- The analyst can then query this smaller, focused table at interactive speeds without incurring massive compute penalties.
+### Sentinel MCP Server & Notebooks
+- To democratize advanced threat hunting, Microsoft introduced the Sentinel MCP Server. The MCP provides a unified, hosted integration standard allowing external AI agents to securely interface with the Sentinel SIEM graph and telemetry using natural language.
+- This negates the need to construct complex infra pipelines to feed security data into ML models.
+- Connecting VS Code to the Sentinel MCP Server:
+	1. Install the MCP extension and the GitHub Copilot extension in VS Code.
+	2. `Ctrl+Shift+P` to open the command palette, and type `MCP: Add Server`.
+	3. Select the connection type as HTTP (Server-Sent Events).
+	4. Enter the specific Sentinel MCP endpoint URL corresponding to the tenant.
+	5. Authenticate via MS Entra ID (at least `Security Reader` role to authorize the connection).
+	6. Open the agent chat interface and configure to Agent mode. Prompt something like: *Analyze the Data Lake. Find the top three users that are at a risk of a pass-the-hash attack and explain why based on IdentityLogonEvents.*
 #### Common Tables
 - **AzureActivity:** Entries from the Azure activity log.
 - **AzureDiagnostics:** Stores resource logs for services that use Azure diagnostics mode.
