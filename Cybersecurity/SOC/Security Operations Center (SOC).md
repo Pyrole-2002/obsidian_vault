@@ -307,3 +307,31 @@ The SOC aims to maintain the ***CIA Triad: Confidentiality, Integrity, Availabil
 	- Mail Delivery Agent (MDA): Accepting incoming email msgs from MTAs, places the email in the recipient's inbox.
 	- Mail Submission Agent (MSA).
 	- Mail Retrieval Agent (MRA).
+##### Phishing Attack Types
+- Info Gathering: Collecting data through recon; verify existing accounts, craft credible phishes.
+- Credential Harvesting: Obtain login creds from victims; fake login pages, deceptive URLs.
+- Malware Delivery: Malicious attachments or links; drive-by downloads.
+- Spear Phishing: Targeted and customized phishing; research specific individuals or orgs.
+- Whaling: Targeting high-profile individuals (CEOs, executives).
+- Vishing, SMiShing, & Quishing:
+	- Attempts to obtain info over the phone.
+	- SMS msgs containing malicious URLs.
+	- QR codes leading to malicious URLs.
+- Business Email Compromise (BEC): Compromising legitimate email accs; unauthorized wire transfers, invoice scams.
+- Spam: Unsolicited, irrelevant, and unwanted email; not typically with malicious intent.
+##### Phishing Attack Techniques
+- Pretexting: Fabricating a backstory; manipulation under false pretense.
+- Spoofing & Impersonation: Email address spoofing; domain spoofing.
+- URL Manipulation: URL shortening; subdomain spoofing; typosquatting.
+- Encoding: Obfuscate and evade detection; Base64, URL encoding, HTML encoding.
+- Attachments: Download and execute.
+- Abuse of Legitimate Services: Google Drive, Dropbox; using trusted reputations to send malware.
+- Pharming: Two-step technique; malware-based pharming; DNS server poisoning.
+##### Phishing Analysis Methodology
+1. Initial Triage: Quickly assess and prioritize.
+2. Header & Sender Examination: Investigate MTAs, addresses, IPs; identify the true origin and check authenticity.
+3. Content Examination: Analyze email content for language, formatting; look for social engineering red flags.
+4. Web & URL Examination: Collect web artifacts; utilize tools to inspect URLs and domains.
+5. Contextual Examination: Consider broader context, recent or current incidents; look for patterns and assess scope.
+6. Defense Measures: Take reactive and proactive defense actions; communicate with users and stakeholders.
+7. Documentation & Reporting: Maintain records of finding, verdicts, and actions taken; close out alerts and tickets.
