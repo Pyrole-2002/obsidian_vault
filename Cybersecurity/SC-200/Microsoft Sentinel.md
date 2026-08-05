@@ -475,7 +475,7 @@ let csl_columnmatch=(column_name: string) {
 - Connecting VS Code to the Sentinel MCP Server:
 	1. Install the MCP extension and the GitHub Copilot extension in VS Code.
 	2. `Ctrl+Shift+P` to open the command palette, and type `MCP: Add Server`.
-	3. Select the connection type as HTTP (Server-Sent Events).
+	3. Select the connection type as [[HTTP and HTTPS|HTTP]] (Server-Sent Events).
 	4. Enter the specific Sentinel MCP endpoint URL corresponding to the tenant.
 	5. Authenticate via MS Entra ID (at least `Security Reader` role to authorize the connection).
 	6. Open the agent chat interface and configure to Agent mode. Prompt something like: *Analyze the Data Lake. Find the top three users that are at a risk of a pass-the-hash attack and explain why based on IdentityLogonEvents.*
