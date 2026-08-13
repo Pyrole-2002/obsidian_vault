@@ -1,6 +1,6 @@
 - `netdiscover` is a network recon tool designed primarily for IPv4 address discovery on LANs.
 - It works on Layer 2, unlike tools like [[Nmap]] which often use ICMP (ping) or [[TCP]]/[[UDP]] packets (Layer 3/4).
-- It operates primarily using [[ARP]].
+- It operates primarily using [[Cybersecurity/Networking/Protocols/ARP]].
 - **Broadcasting:** When run in active mode, it sends out ARP request packets to the local network segment.
 - **Responses:** Any active device on that local network that owns or listens to that IP will reply with an ARP reply containing its MAC address.
 - It can also run passively with -p flag, simply listening to the network passing by without sending any packets itself. This is stealthier but relies on other devices talking.

@@ -1,4 +1,4 @@
-- `arp-scan` is a cli tool that discovers devices on a local network segment by sending [[ARP]] (Address Resolution Protocol) requests and listening for replies. It is fast, accurate, and virtually impossible for hosts to hide from, because every device on a LAN must answer ARP to communicate.
+- `arp-scan` is a cli tool that discovers devices on a local network segment by sending [[Cybersecurity/Networking/Protocols/ARP]] (Address Resolution Protocol) requests and listening for replies. It is fast, accurate, and virtually impossible for hosts to hide from, because every device on a LAN must answer ARP to communicate.
 - **Operates at Layer 2 (Data Link)**: Unlike tools that rely on [[ICMP]] ping or [[TCP]]/[[UDP]] probes (Layer 3/4), `arp-scan` uses raw ARP frames.
 - **Firewall‑proof**: Local host firewalls that drop ICMP or TCP packets **cannot** block ARP replies; the ARP protocol is handled by the kernel’s network stack below the firewall layer.
 - **Extremely fast**: A `/24` network can be scanned in a few seconds.

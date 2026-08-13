@@ -124,7 +124,7 @@ nc <victim_IP> 4444
 - A common stager downloads and executes a larger reverse shell binary.
 - Netcat-like commands are typically stageless: the whole shell command runs in one line.
 ### Web Shells
-- When [[HTTP and HTTPS|HTTP/HTTPS]] is the only protocol allowed out, attackers may upload a web shell (PHP, ASPX) instead of using raw TCP.
+- When [[HTTP_HTTPS|HTTP/HTTPS]] is the only protocol allowed out, attackers may upload a web shell (PHP, ASPX) instead of using raw TCP.
 - Netcat can still be used to handle the callback, but the initial foothold uses the web server.
 ### DNS / [[ICMP]] Tunnels
 - If all outbound ports except [[DNS]] (UDP 53) are blocked, reverse shells can be wrapped inside DNS queries.

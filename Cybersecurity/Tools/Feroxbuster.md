@@ -8,7 +8,7 @@
 - **Advanced recursion control**: Set depth limits, force recursion on specific status codes, or use dynamic depth.
 - **Output versatility**: JSON, CSV, HTML report, and plain text.
 - **Resume capability**: Pause and resume scans via state files.
-- **Proxy support**: Route traffic through [[HTTP and HTTPS|HTTP]]/SOCKS proxies.
+- **Proxy support**: Route traffic through [[HTTP_HTTPS|HTTP]]/SOCKS proxies.
 - **Rate limiting & timeouts**: Fine-tune to avoid overwhelming targets.
 - **Configuration files**: Set defaults in `ferox-config.toml`.
 - **Heuristic filtering**: Automatically adjust filters based on observed responses.

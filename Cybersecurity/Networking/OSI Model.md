@@ -88,7 +88,7 @@
 - Function: Provides network services directly to end users and apps.
 - It is the closest layer to the user. It does not include the actual app itself, but the protocols apps use to communicate.
 - Examples:
-	- [[HTTP and HTTPS]], FTP, [[SMTP]], [[POP3]], [[IMAP]]
+	- [[HTTP_HTTPS]], FTP, [[SMTP]], [[POP3]], [[IMAP]]
 	- [[DNS]], [[DHCP]], [[SSH]], Telnet, [[SNMP]]
 - When you open a browser and visit a website, the browser uses Layer 7 protocols.
 ---
@@ -123,7 +123,7 @@ The OSI model is conceptual. The TCP/IP model is the actual protocol suite used 
 - **PDU names by layer:** Bits → Frames → Packets → Segments → Data
 - **Layer 2 vs Layer 3 addressing:**  
 	- MAC addresses work at Layer 2, IP addresses at Layer 3.  
-	- **[[ARP]]** maps IP addresses to MAC addresses and operates between Layers 2 and 3.
+	- **[[Cybersecurity/Networking/Protocols/ARP]]** maps IP addresses to MAC addresses and operates between Layers 2 and 3.
 - **Switches vs Routers:**  
     Switches forward frames using MAC addresses (Layer 2).  
     Routers forward packets using IP addresses (Layer 3).
@@ -136,3 +136,4 @@ The OSI model is conceptual. The TCP/IP model is the actual protocol suite used 
     Each layer adds its own header/trailer. Receivers remove them in reverse order.
 - **Not all protocols fit perfectly:**  
     Some protocols cross layers. For example, TLS/SSL is often placed at Presentation/Session, but in TCP/IP it is part of Application. MPLS is sometimes called “Layer 2.5.”
+---

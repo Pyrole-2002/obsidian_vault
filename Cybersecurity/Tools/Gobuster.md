@@ -18,7 +18,7 @@ For these features, the behavior is essentially identical to [[Feroxbuster]]:
 - **Custom headers** (`-H`, `--header`) – add multiple headers.
 - **Cookies** (`-c`, `--cookie`).
 - **User-Agent** (`-a`, `--useragent`).
-- **Proxy** (`-p`, `--proxy`) – [[HTTP and HTTPS|HTTP]]/SOCKS5 proxy support.
+- **Proxy** (`-p`, `--proxy`) – [[HTTP_HTTPS|HTTP]]/SOCKS5 proxy support.
 - **Timeout** (`--timeout`) – per-request timeout.
 - **TLS / insecure** (`-k`, `--no-tls-validation`) – ignore certificate errors.
 - **Rate limiting / delay** – Gobuster uses `--delay` (milliseconds between requests) instead of a direct “requests per second” option; you can approximate a rate limit with `--delay` or combine with `-t`.

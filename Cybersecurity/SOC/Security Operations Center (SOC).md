@@ -101,7 +101,7 @@ The SOC aims to maintain the ***CIA Triad: Confidentiality, Integrity, Availabil
 	- **Next-Generation Firewalls (NGFW)**
 		- Layer 7; stateful packet inspection; deep packet inspection.
 	- **Web Application Firewall (WAF)**
-		- Layer 7; Inspect [[HTTP and HTTPS]] traffic; protect webapps from attacks.
+		- Layer 7; Inspect [[HTTP_HTTPS]] traffic; protect webapps from attacks.
 - **Intrusion Detection and Prevention Systems (IDS / IPS)**
 	- Passive or active monitoring.
 	- Generate alerts.

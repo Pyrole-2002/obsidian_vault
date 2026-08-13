@@ -1,6 +1,6 @@
 # `dirb` : Web Content Scanner
 - `dirb` is a cli tool used in pentesting to discover hidden directories and flies on a web server.
-- Operates exclusively over [[HTTP and HTTPS]]; unlike [[Nmap]] or [[Enum4linux]], it does not probe lower-level services or protocols.
+- Operates exclusively over [[HTTP_HTTPS]]; unlike [[Nmap]] or [[Enum4linux]], it does not probe lower-level services or protocols.
 - Launches a dictionary-based attack. It takes a wordlist, appends each entry to a target URL, and analyses the HTTP response codes to determine if a resource exists.
 ### Syntax
 ```bash
