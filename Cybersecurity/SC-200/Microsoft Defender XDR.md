@@ -379,7 +379,7 @@ Get-MpPreference | Select-Object AttackSurfaceReductionRules_Ids, AttackSurfaceR
 	1. Go to the ***MS Defender Portal***.
 	2. Navigate to ***Settings>MS Defender XDR***.
 	3. Under the ***Automated Response*** heading, select ***Identities*** or ***Devices***.
-	4. To exclude and entity, select ***Add User Exclusion***. Provide the User Principal Name (UPN).
+	4. To exclude an entity, select ***Add User Exclusion***. Provide the User Principal Name (UPN).
 	5. To exclude a device, specify a predefined Device Tag representing the critical asset group, and save the config.
 #### Investigate a File
 - Investigate the details of a file associated with a specific alert, behavior, or event to help determine if the file exhibits malicious activities, identify the attack motivation, and understand the potential scope of the breach.
@@ -409,3 +409,4 @@ Get-MpPreference | Select-Object AttackSurfaceReductionRules_Ids, AttackSurfaceR
 - Create the compliance policy in Intune Admin Center.
 - Assign the policy.
 - Create an Entra ID Conditional Access Policy.
+---

@@ -36,7 +36,7 @@
 	- Payload
 	- Frame Check Sequence (FCS) for error detection
 - Switches learn which MAC addresses are reachable on which ports and forward frames accordingly.
-### [[Cybersecurity/Networking/Protocols/ARP]]: Address Resolution Protocol
+### [[Cybersecurity/Networking/Protocols/ARP|ARP]]: Address Resolution Protocol
 - ARP maps an IPv4 address to a MAC address on a local network.
 - Host sends an ARP request (broadcast) asking  "Who has IP `192.168.1.10`? Tell `192.168.1.5`."
 - The owner replies with an ARP reply (unicast) containing its MAC address.
