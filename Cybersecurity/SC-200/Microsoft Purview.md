@@ -89,7 +89,7 @@ Security Operations Analysts can assist compliance and eDiscovery admins with:
 ### Investigation with Audit (Premium)
 - Audit premium provides deeper visibility into user activity, helping orgs investigate sensitive access, detect suspicious behavior, and respond to incidents.
 - Example: Investigate Email Access
-	- Use `MailItemsAccessed` to se what messages were accessed, by whom, and from where.
+	- Use `MailItemsAccessed` to see what messages were accessed, by whom, and from where.
 	- Bind access: Logs individual email views.
 	- Sync access: Logs bulk download.
 	- Logging pauses after 1000 bind events/day per mailbox (throttling).
@@ -98,10 +98,10 @@ Security Operations Analysts can assist compliance and eDiscovery admins with:
 - Export results to CSV to review access type and throttling details in the raw audit data.
 ### Export Audit Log Data
 - Exporting audit logs to CSV supports deeper analysis and helps meet client compliance requirements.
-1. Run a search in the MS Purview portal.
-2. Select Export to download up to 50000 audit records as a CSV file.
-3. Open the CSV in Excel.
-4. Use Power Query Editor to transform the `AuditData` column from JSON to readable columns.
+	1. Run a search in the MS Purview portal.
+	2. Select Export to download up to 50000 audit records as a CSV file.
+	3. Open the CSV in Excel.
+	4. Use Power Query Editor to transform the `AuditData` column from JSON to readable columns.
 ### Configure Audit Retention with Audit (Premium)
 - Custom retention policies help orgs meet regulatory requirements by controlling how long audit data is kept.
 - Default Retention (Premium):
