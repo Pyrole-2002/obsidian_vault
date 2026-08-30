@@ -27,8 +27,25 @@ TableName
 | `datatable` | Create an inline table.                                             | `datatable (Name:string, Age:int) ["Alice",30]`            |
 | `print`     | Output a single row.                                                | `print now()`                                              |
 ### Filtering & Conditioning
-`where` filters rows using boolean expressions.
-Operators: `==`, `!=`, `=~` (case-insensitive), `!~`, `contains`, `contains_cs`, `startswith`, `endswith`, `has` (whole word match), `has_cs`, `in`, `!in`, `between`, `and`, `or`, `not`.
+- `where` filters rows using boolean expressions.
+- Operators: `==`, `!=`, `=~` (case-insensitive), `!~`, `between`, `and`, `or`, `not`.
+#### String Operators:
+Prefer `has` over `contains` when searching for whole words. `has` uses index, `contains` does full scan.
+
+| Operator        | Description                       | Example                                          |
+| --------------- | --------------------------------- | ------------------------------------------------ |
+| `has`           | Case-insensitive whole term match | `Message has "error"`                            |
+| `has_cs`        | Case-sensitive whole term         | `Message has_cs "Error"`                         |
+| `contains`      | Case-insensitive substring        | `Message contains "err"`                         |
+| `contains_cs`   | Case-sensitive substring          | `Message contains_cs "Err"`                      |
+| `startswith`    | Case-insensitive prefix           | `User startswith "adm"`                          |
+| `endswith`      | Case-insensitive suffix           | `File endswith ".exe"`                           |
+| `matches regex` | Regular expression                | `Message matches regex @"^Error [0-9]+"`         |
+| `in`            | Case-sensitive set membership     | `EventID in (4624, 4625)`                        |
+| `in~`           | Case-insensitive set              | `User in~ ("admin", "Admin")`                    |
+| `has_any`       | Any term present                  | `Message has_any ("malware", "virus", "ransom")` |
+| `has_all`       | All terms present                 | `Message has_all ("failed", "login")`            |
+
 ```sql
 SecurityEvent
 | where EventID == 4625 and TimeGenerated > ago(1d)
@@ -55,8 +72,24 @@ SigninLogs,
 | extend IsAdmin = iff(UserPrincipalName contains "admin", true, false)
 ```
 ### Aggregation & Summarization
-`summarize` : Aggregate rows by grouping keys. Produces a single row per group.
-Aggregation Functions: `count()`, `dcount()` (distinct count), `sum()`, `avg()`, `min()`, `max()`, `stdev()`, `variance()`, `percentile()`, `make_list()`, `make_set()`, `take_any()`, `arg_max()`, `arg_min()`, `bin()` (group by time buckets).
+- `summarize` : Aggregate rows by grouping keys. Produces a single row per group.
+- Aggregation Functions:
+	- `count()` – number of rows
+	- `countif(condition)` – count rows matching condition
+	- `dcount(column)` – distinct count
+	- `dcountif(column, condition)`
+	- `sum(column)`
+	- `sumif(column, condition)`
+	- `avg(column)`
+	- `min(column)`, `max(column)`
+	- `percentile(column, 50)`, `percentiles(column, 50, 90, 99)`
+	- `arg_max(column_to_max, column_to_return)` – returns row with max value
+	- `arg_min(column_to_min, column_to_return)`
+	- `make_set(column)` – creates dynamic array of distinct values
+	- `make_list(column)` – creates dynamic array of all values (up to 64 KB)
+	- `make_bag()` – creates property bag
+	- `stdev()`, `variance()`
+- `bin()` is crucial for time-series aggregation:
 ```sql
 SecurityEvent
 | where EventID == 4625
@@ -67,6 +100,20 @@ SecurityEvent
 ```sql
 DeviceProcessEvents
 | summarize arg_max(TimeGenerated, *) by DeviceName
+```
+```sql
+SigninLogs
+| summarize Count = count(), 
+            DistinctUsers = dcount(UserPrincipalName),
+            Failed = countif(ResultType == "50057")
+         by AppDisplayName
+```
+- `make-series` creates arrays of values over a fixed time axis, filling gaps. This produces a series per user, useful for anomaly detection:
+```sql
+SigninLogs
+| make-series Failed = countif(ResultType == "50057") default = 0
+    on TimeGenerated from ago(7d) to now() step 1d
+    by UserPrincipalName
 ```
 ### Joins
 - `join` combines rows from two tables based on matching columns.
@@ -93,6 +140,42 @@ SigninLogs
 - `extract` : regex extraction
 - `parse_json()` : cast string to dynamic
 - `tostring()`, `toint()`, `todouble()`, `todatetime()`, `tobool()`
+```sql
+SecurityEvent
+| parse Message with "The computer attempted to validate the credentials for an account." *
+
+/* Better with patterns */
+| parse Message with * "Account Name: " AccountName * "Account Domain: " AccountDomain *
+
+/* Regex capture groups */
+| extend Ip = extract(@"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", 1, Message)
+
+/* All matches */
+| extend AllIps = extract_all(@"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})", Message)
+
+/* Split string into array */
+| extend Parts = split(UserPrincipalName, "@")
+| extend Domain = Parts[1]
+
+/* Misc */
+| extend FullName = strcat(FirstName, " ", LastName)
+| extend UpperUPN = toupper(UserPrincipalName)
+| extend Domain = substring(UserPrincipalName, indexof(UserPrincipalName, "@") + 1)
+
+/* Convert json string to dynamic object */
+| extend Properties = parse_json(Properties)
+| extend UserAgent = Properties.UserAgent
+
+/* Expand */
+| mv-expand AlertIds = parse_json(AlertIds)
+
+/* Convert dynamic property bag to columns */
+| evaluate bag_unpack(Properties)
+
+/* Array indexing */
+| extend FirstItem = MyArray[0]
+| extend FirstObj = MyArray[0].Name
+```
 ### Time Operations
 | Function                                          | Description                      |
 | ------------------------------------------------- | -------------------------------- |
@@ -124,6 +207,14 @@ User-defined functions:
 ```sql
 let isWeekend = (d:datetime) { dayofweek(d) >= 6 };
 SigninLogs | where isWeekend(TimeGenerated)
+```
+Views:
+```sql
+let HighRiskSignins = view () {
+    SigninLogs
+    | where RiskLevelDuringSignIn == "high"
+};
+HighRiskSignins | count
 ```
 ### `materialize()`
 Capture an intermediate result so it’s computed once when used multiple times. Useful in complex joins/subqueries.
@@ -344,6 +435,20 @@ EmailEvents
 | where AttachmentCount > 10
 | project Timestamp, SenderFromAddress, RecipientEmailAddress, AttachmentCount, Subject
 | order by AttachmentCount desc
+```
+### KQL in Microsoft Sentinel
+- **Analytics Rules**: Use KQL query to define detection logic.
+- **Hunting Queries**: KQL queries to proactively search threats.
+- **Workbooks**: KQL to populate visualizations.
+- **Playbooks**: Not KQL but Logic Apps.
+- Example Analytics Rule Query:
+```sql
+let timeframe = 1h;
+SigninLogs
+| where TimeGenerated > ago(timeframe)
+| where ResultType == "50057"  // Account locked out
+| summarize LockoutCount = count() by UserPrincipalName, IPAddress
+| where LockoutCount > 10
 ```
 ---
 # Microsoft Sentinel
