@@ -39,5 +39,9 @@
   "Competitive Programming": {
     "iconName": "LiCode2",
     "iconColor": "#ff0059"
+  },
+  "Quantum Computing": {
+    "iconName": "LiPuzzle",
+    "iconColor": "#00ffaa"
   }
 }
