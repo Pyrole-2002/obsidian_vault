@@ -28,6 +28,7 @@
 ## Incidents
 - Defender XDR groups related alerts, compromised assets, and automated investigations into a single pane of glass called an Incident.
 - The Incident Graph visually maps the blast radius, illustrating the relationships between a malicious email delivery, the identity that clicked the payload, and the endpoint where execution occurred.
+- The ***Evidence and Response*** tab in Defender XDR offers a centralized view of all entities associated with a security incident, including users, devices, emails, files, and URLs. It highlights the investigation outcome for each item and displays any automated actions, such as quarantining emails or isolating devices.
 ## Advanced Hunting
 - It allows security analysts to perform cross-domain KQL queries directly against the unified XDR telemetry. From these queries, custom detection rules can be authored. To properly generate an incident, the custom detection query must project specific entity identifiers such as `Timestamp`, `DeviceId`, or `AccountObjectId`.
 - This is a query based threat-hunting tool that lets you explore up to 30 days of raw data.
@@ -105,7 +106,7 @@ IdentityLogonEvents
 - **Sign-in risk policy**
 	- Require MS Entra multifactor authentication when sign-in risk level is Medium or High, allowing users to prove it's them by using one of their registered authentication methods, remediating the sign-in risk.
 ## MS Defender for Cloud Apps
-- Defender for cloud apps deals is built to:
+- Defender for cloud apps is built to:
 	- Discovering and control the user of Shadow IT.
 	- Protect your sensitive info anywhere in the cloud.
 	- Protect against cyberthreats and anomalies.
@@ -140,6 +141,11 @@ Inventory Summary:
 - Use MS Defender for Cloud Attack Path Analysis and Security Explorer to scan and query the cloud security graph.
 - Attack path analysis exposes attack paths and suggests recommendations as how to best remediate issues that will break the attack path and prevent successful breach.
 - Use Cloud Security Explorer query builder to run graph based queries.
+- AMA runs inside the VM guest OS.
+- DCR is an ARM object that defines:
+	- Data Sources: Windows Event Logs, Syslog facilities, performance counters.
+	- Destinations: Specific Log Analytics workspaces.
+  Without a DCR link, the agent remains completely dormant.
 ### Cloud Security Posture Management
 <table style="border-collapse: collapse; width: 100%; text-align: center;">
   <thead>
@@ -201,11 +207,27 @@ Inventory Summary:
 - This builds on the cloud security principles defined by the Azure Security Benchmark and applies these principles with detailed technical implementation guidance for Azure, for other cloud providers, and for other MS Clouds.
 - The MCSB is the default policy initiative for Defender for Cloud and is the foundation of our security recommendations.
 ### MS Defender for Servers
-- Plan 1: Deploys MS Defender for Endpoint to your servers and provides these capabilities:
-	- MS Defender for Endpoint licenses are charged per hour instead of per seat, lowering costs for protecting VMs only when they are in use.
-	- Defender for Endpoint deploys automatically to all cloud workloads so that you know they're protected when they spin up.
-	- Alerts and vulnerability data from Defender for Endpoints is shown in Defender for Cloud.
-- Plan 2: (Formerly Defender for Servers) Includes the benefits of Plan 1 and support for all of the other Defender for Servers features.
+- MS Defender for Cloud provides Cloud Workload Protection (CWPP) through specialized plans:
+	1. Plan 1: Deploys MS Defender for Endpoint to your servers and provides these capabilities:
+		- MS Defender for Endpoint licenses are charged per hour instead of per seat, lowering costs for protecting VMs only when they are in use.
+		- Defender for Endpoint deploys automatically to all cloud workloads so that you know they're protected when they spin up.
+		- Alerts and vulnerability data from Defender for Endpoints is shown in Defender for Cloud.
+	2. Plan 2: (Formerly Defender for Servers) Includes the benefits of Plan 1 and support for all of the other Defender for Servers features.
+- The Defender for Servers plan extends advanced threat detection and behavioral analytics to VMs.
+- Defender for Servers manages automatic provisioning (deploying the required monitoring agents/extensions) and provisions the necessary configs (like DCRs) to automatically pipe Windows Security events and Linux Syslogs  directly into workspace.
+- Under ***Defender for Cloud > Environment settings > Defender plans***, enabling Servers (Plan 1 or Plan 2) activates server-side threat detection. It provides agentless machine scanning.
+- Under ***Settings & Monitoring***, Defender for Cloud uses built-in Azure Policies behind the scenes to:
+	1. Auto-provision the AMA / Defender for Endpoint extensions on all discovered VMs.
+	2. Create and associate the default DCRs.
+	3. Route security events to the designated workspace linked at the subscription level.
+#### Component Reference Table
+
+| **Component**                        | **Primary Function**                                             | **Handles Guest OS Security Logs?**                 |
+| ------------------------------------ | ---------------------------------------------------------------- | --------------------------------------------------- |
+| **Defender for Servers**             | CWPP threat detection, vulnerability management, auto-onboarding | **Yes** (manages agent deployment and DCR routing)  |
+| **Azure Monitor Agent (Standalone)** | Telemetry forwarder inside VM guest OS                           | **Only when linked to a configured DCR**            |
+| **VM Diagnostic Settings**           | Streams platform/host-level metrics and boot diagnostics         | **No** (host hypervisor only, not OS security logs) |
+| **Workflow Automation**              | Triggers Logic Apps based on alerts/recommendations              | **No** (alert orchestration, not data ingestion)    |
 ### MS Defender for App Service
 - MS Defender for App Service uses the scale of the cloud to identify attacks targeting apps running over App Service.
 - Attackers probe web apps to find and exploit weaknesses. Before being routed to specific environments, requests to apps running in Azure go through several gateways, where they're inspected and logged.
@@ -258,6 +280,11 @@ Inventory Summary:
 		- **Live Response:** Enables remote shell connectivity to managed devices for forensic investigation.
 		- **Live Response Unsigned Script Execution:** Allows custom PowerShell scripts from the tenant library to execute on endpoints. This requires strict RBAC governance, as allowing scripts increases the potential attack surface if the tenant is compromised.
 		- **Enable EDR in Block Mode:** Instructs the Endpoint Detection and Response (EDR) sensor to proactively block malicious artifacts post-breach, even if a third-party antivirus is operating as the primary engine.
+- The Automated Investigation and Response (AIR) feature automates responses to common incidents, such as investigating malware alerts, isolating devices, and blocking malicious files, reducing the need for manual intervention and allowing teams to focus on more complex tasks.
+- Isolating the device from the network is crucial for preventing the spread of malware once it is detected. Although AIR automates the process of detecting and responding to threats, isolating a device is a manual action to ensure that the malware cannot propagate to other systems within the network. This manual intervention is necessary to ensure that the device is fully secured and contained before further remediation steps are taken.
+- Hard deleting email messages involves permanently removing the email from the system. Defender for Office 365 handles this automatically when malicious emails are detected.
+- Defender for Office 365 can quarantine emails automatically as part of its automated security measures.
+- Defender for Endpoint manages scans automatically to detect and remove threats. A full system scan may be triggered manually in some situations, but most scans are handled by the system without requiring manual intervention unless specific actions are needed for a more in-depth review.
 ### Deploy the MS Defender for Endpoint Environment
 - Data storage location: Determined by the geo-location of the tenant during provisioning. You can't change the location after this setup.
 - Data retention: Data from Defender for Endpoint is retained for 180 days. However, in an advanced hunting investigation it's accessible via a query for a period of 30 days.
@@ -334,6 +361,39 @@ Add-MpPreference -AttackSurfaceReductionOnlyExclusions "C:\LegacyApp\finance_mac
 # Review the configured ASR rules and their current states on a local machine
 Get-MpPreference | Select-Object AttackSurfaceReductionRules_Ids, AttackSurfaceReductionRules_Actions
 ```
+- The Portable Executable (PE) format is the file format used by Windows OS for executables, object code, and DLLs. It encapsulated the headers, code, data, and metadata needed by the Windows OS loader to run code or load drivers into memory.
+- Common Windows PE extensions:
+	- `.exe`
+	- `.dll`
+	- `.sys`
+	- `.scr`
+	- `.ocx` / `.cpl`
+#### MDE Custom File Indicators (IoCs)
+- File indicators enable SecOps teams to allow, detect/audit, warn, or block specific files across managed devices.
+- Supported Actions: Allow, Audit, Warn, Block Execution, Block & Remediate.
+- Enforcement Mechanism: When a files is accessed or executed, the Defender Antivirus client computes its hash and checks against enterprise custom indicators.
+- Prerequisites for Hash Blocking:
+	- MS Defender Antivirus in Active mode.
+	- Cloud-delivered protection enabled.
+	- Behavior monitoring enabled.
+	- File hash computation turn on: `Set-MpPreference -EnableFileHashComputation $true`
+	- The feature switch "Allow or block file" enabled under ***Settings > Endpoints > General > Advanced features***.
+- Platform support matrix for file indicators:
+	- Windows: PE files only.
+	- macOS: Mach-O executables, POSIX shell scripts (`.sh`, `.bash`), AppleScript (`.scpt`).
+	- Linux: ELF binaries and supported executable formats.
+#### Non-PE Files
+- Malicious non-PE files (`.docx`, `.xlsx`): Because hash indicators cannot block non-PE files, Microsoft relies on multi-layered defenses:
+	- MS Defender for Office 365: Safe Attachments and Safe Links inspect docs in dynamic sandbox environments before delivery.
+	- ASR Rules: Rules such as "Block Office applications from creating child processes" or "Block Office applications from injecting code into other processes".
+	- Real-time Antivirus & Cloud ML: Defender Antivirus analyzes doc macros, embedded OLE objects, and CVE exploits using heuristics and cloud-based definitions, regardless of custom hash rules.
+- Precedence of Indicators:
+	- Windows Defender Application Control (WDAC) / AppLocker
+	- Defender Antivirus Exclusions
+	- Custom Block/Warn Indicators
+	- SmartScreen Blocks
+	- Custom Allow Indicators
+- Hash Precedence: If conflicting indicators exist for the same file, Defender prioritizes the strongest hash algorithm: SHA-256 > SHA-1 > MD5.
 ### Investigation
 #### Live Response & Investigation Packages
 - Live Response provides a powerful remote cli directly to an endpoint. To utilize this capability, the machine must be running a supported OS and Live Response must be explicitly enabled in the MDE Advanced Features settings.

@@ -39,7 +39,7 @@
 	- You must have an Azure subscription.
 	- You must be an Azure owner or Azure contributor, at a resource group level, as a minimum.
 - There are 2 options for provisioning capacity:
-	- Provision within Security Copilot (recommended.
+	- Provision within Security Copilot (recommended).
 	- Provision capacity through Azure portal.
 - Copilot provides a usage monitoring dashboard for capacity owners.
 ### Set up Default Environment
