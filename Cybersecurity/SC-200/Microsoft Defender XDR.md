@@ -146,6 +146,18 @@ Inventory Summary:
 	- Data Sources: Windows Event Logs, Syslog facilities, performance counters.
 	- Destinations: Specific Log Analytics workspaces.
   Without a DCR link, the agent remains completely dormant.
+### Suppression Rules
+- They allow orgs to automatically dismiss recurring or false positive security alerts, streamlining alert management and reducing noise. These rules can be configured for specific resources, alert types, or conditions, and can be applied at the subscription or management group level.
+- Users with appropriate roles, such as Security Admin or Owner, can create and manage these rules through the Azure portal or REST API.
+- To suppress alerts in MS Defender for Cloud:
+	1. Navigate to the ***Security Alerts*** page in MS Defender for Cloud.
+	2. Select the alert you want to suppress, click the three dots at the end of the row and choose ***Create Suppression Rule***.
+	3. In the ***New Suppression Rules*** page, select the alert you wish to suppress.
+	4. Choose the entities for which you want to suppress the alert, such as specific IP ranges, processes, resources, or user accounts.
+	5. Enter the rule details, including the rule name, reason for suppression, comments, and an expiration date (up to 6 months in the future).
+	6. Click ***Simulate*** to test the rule before applying it and ensure its correctness.
+	7. Click ***Apply*** to finalize the suppression rule.
+	8. To manage existing suppression rules, click the ***Suppression Rules*** button at the top of the ***Security Alerts*** page.
 ### Cloud Security Posture Management
 <table style="border-collapse: collapse; width: 100%; text-align: center;">
   <thead>
@@ -220,6 +232,9 @@ Inventory Summary:
 	1. Auto-provision the AMA / Defender for Endpoint extensions on all discovered VMs.
 	2. Create and associate the default DCRs.
 	3. Route security events to the designated workspace linked at the subscription level.
+- Defender for Servers protects non-Azure machines by projecting them into Azure Resource Manager (ARM) via Azure Arc:
+	- The machine gets an ARM Resource ID, appearing inside Azure just like a native Azure VM.
+	- Once registered as an Arc-enabled server, Azure VM extensions (agents, configurations, scripts) can be managed, updated, and monitored centrally through ARM APIs and Azure Policy.
 #### Component Reference Table
 
 | **Component**                        | **Primary Function**                                             | **Handles Guest OS Security Logs?**                 |
@@ -252,6 +267,8 @@ Inventory Summary:
 	- Address threats without the need to manage third-party security monitoring systems.
 - When anomalous activities occur, Defender shows alerts and optionally sends them via email to relevant members of your org. These alerts include the details of the suspicious activity and recommendations on how to investigate and remediate threats.
 ### MS Defender for Resource Manager
+- Defender for Resource Manager is a security capability that continuously monitors Azure Resource Manager (ARM) activities triggered via the Azure portal, REST APIs, CLI, or SDKs to detect malicious or unauthorized operations. This includes suspicious management actions like unusual IP access, disabling antimalware, or use of known cloud exploitation toolkits.
+- It uses advanced analytics to flag potentially harmful activities before they impact workloads.
 - It protects against following issues:
 	- Suspicious resource management operations, such as operations from malicious IP addresses, disabling antimalware, and suspicious scripts running in VM extensions.
 - Use of exploitation toolkits like Microburst or PowerZure.
@@ -262,7 +279,13 @@ Inventory Summary:
 	- Monitor API traffic against top OWASP API threats through ML based and threat intelligence based detections.
 	- Security insights including identifying unauthenticated, inactive/dormant, and externally exposed APIs.
 	- Classifies APIs that receive or respond with sensitive data.
-
+### MS Defender for DevOps
+- In terms of DevOps security, Defender for Cloud offers a central console that assists security teams in protecting apps and resources throughout the dev process and into the cloud, covering multi-pipeline environments such as Azure DevOps, GitHub and GitLab.
+- Capabilities of DevOps security include:
+	- Unified visibility into DevOps security posture: Security admins have full visibility into DevOps inventory and the security posture of preproduction app code across multi-pipeline and multi-cloud environments. They can see findings from code, secrets, and open-source dependency vulnerability scans. They can also assess the security configs of their DevOps environment.
+	- Strengthen cloud resource configs throughout the dev lifecycle: You can secure IaC templates and container images to minimize cloud misconfigs reaching prod environments.
+	- Prioritize remediation of critical issues in code: Apply comprehensive code-to-cloud contextual insights within Defender for Cloud. Security admins help devs prioritize critical code fixes with pull request annotations and assign developer ownership by triggering custom workflows that feed directly into the tools devs use.
+- You can link your GitHub orgs on the Environment settings page within Defender for Cloud. By connecting your GitHub envs to Defender for Cloud you enhance the security features for your GitHub resources and improve your overall security posture.
 ##  MS Defender for Endpoint (MDE)
 - MDE affords analysts the capability to perform surgical containment and forensic evidence gathering on remote machines without alerting the adversary.
 - MDE settings govern the sensor behavior on individual machines across the enterprise.
@@ -414,6 +437,8 @@ Get-MpPreference | Select-Object AttackSurfaceReductionRules_Ids, AttackSurfaceR
 - For intensive, long running commands (such as a full memory dump), analysts can append an `&` to send the command to the background, allowing the analyst to continue executing other commands concurrently.
 - Using the `fg` command will bring the background process back to the foreground upon completion.
 - For extensive forensic triage, analysts can trigger the collection of an Investigation Package. This automated action pulls a predefined set of artifacts, including process lists, active network connections, autorun configs, and system event logs, compiling them into a downloadable ZIP archive directly form the device page. Linux troubleshooting relies on downloading and executing the Python or binary-based Client Analyzer (`mde_support_tool.sh` or `MDESupportTool`) to generate diagnostic logs.
+- Prefetch files is an integral part of the data collected within the investigation package and play a key role in understanding file execution on Windows systems.
+  These files store records of apps that have been executed, including timestamps for the first and last time they were run. By analyzing prefetch files, you can trace the history of app executions on a device, which helps identify when specific files were launched.
 #### Automated Investigation & Response (AIR)
 - MS Defender utilizes device groups to apply specific automation levels to clusters of endpoints.
 - By segregating machines logically, orgs can dictate whether threats are remediated automatically or require manual SOC approval.

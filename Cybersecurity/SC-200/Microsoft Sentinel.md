@@ -612,3 +612,10 @@ let csl_columnmatch=(column_name: string) {
 - **DeviceTvm*:** Microsoft Defender Vulnerability Management Security & Software information.
 - **EmailEvents:** Microsoft 365 email events, including email delivery and blocking events.
 - **IdentityInfo:** Account information from various sources, including Entra ID.
+### MS Sentinel Fusion
+- It is a built-in, ML based detection feature to identify complex, multistage attacks across your environment.
+- Instead of relying on simple rule-based conditions, Fusion analyzes patterns from multiple data sources to find correlations that indicate advanced threats. These may include combinations of identity compromise, endpoint alerts, cloud anomalies, and other suspicious behaviors that, when viewed together, reveal a potential attack path.
+### Windows Event Forwarding (WEF)
+- WEF is a built-in Windows capability that allows endpoints (domain-joined workstations and servers) to forward selected event logs, including security, account, process, or logon events, to a central Windows Event Collector (WEC) server based on subscriptions.
+- The endpoints do not need third-party agents installed, because WEF uses native Windows components (WinRM, subscription manager via GPO or local policies) to push the events to the collector.
+- Once the WEC server has accumulated the forwarded events, to fulfill the requirement of integrating with MS Sentinel, that server can then use the AMA to send those collected logs into a Log Analytics Workspace monitored by Sentinel.
