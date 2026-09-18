@@ -37,7 +37,7 @@ $$
 \end{pmatrix}
 = \frac{3}{4} |0\rangle + \frac{1}{4} |1\rangle
 $$
-We denote by $\langle a |$ the row vector having a 1 in the entry corresponding to $a \in \Sigma$.
+We denote by $\langle a |$ the row vector having a 1 in the entry corresponding to $a \in \Sigma$, with 0 for all other entries.
 For example, if $\Sigma = \{0,1\}$, then:
 $$
 \langle 0 | = \begin{pmatrix} 1 & 0 \end{pmatrix} \quad \text{and} \quad \langle 1 | = \begin{pmatrix} 0 & 1 \end{pmatrix}
@@ -53,12 +53,14 @@ Multiplying a column vector to a row vector yields a matrix. In general, the mat
 
 The Dirac notation can be used for arbitrary vectors; any name can be used in place of a classical state. Kets are column vectors, Bras are row vectors.
 The notation $|\psi\rangle$ is commonly used to refer to an arbitrary vector:
-$$
+> For Example
+> $$
 |\psi\rangle = \frac{1 + 2i}{3} |0\rangle - \frac{2}{3} |1\rangle
 $$
-$$
+> $$
 \langle\psi| = \frac{1 - 2i}{3} \langle0| - \frac{2}{3} \langle1|
 $$
+
 For any column vector $|\psi\rangle$, the row vector $\langle\psi|$ is the conjugate transpose of $|\psi\rangle$:
 
 $$
@@ -84,10 +86,9 @@ The action of this operation is described by matrix-vector multiplication:
 $$
 v \longmapsto Mv
 $$
-For $\Sigma = \{0, 1\}$, there are four functions of the form $f : \Sigma \to \Sigma$:
-
-$$
-\begin{array}{c|c}
+> For Example:
+> For $\Sigma = \{0, 1\}$, there are four functions of the form $f : \Sigma \to \Sigma$:
+> $$\begin{array}{c|c}
 a & f_1(a) \\ \hline
 0 & 0 \\
 1 & 0
@@ -111,15 +112,14 @@ a & f_4(a) \\ \hline
 1 & 1
 \end{array}
 $$
-
-Here are the matrices corresponding to these functions:
-
-$$
+> Here are the matrices corresponding to these functions:
+> $$
 M_1 = \begin{pmatrix} 1 & 1 \\ 0 & 0 \end{pmatrix} \qquad
 M_2 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} \qquad
 M_3 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \qquad
 M_4 = \begin{pmatrix} 0 & 0 \\ 1 & 1 \end{pmatrix}
 $$
+
 $M$ may also be expressed as:
 $$
 M = \sum_{b \in \Sigma} |f(b)\rangle \langle b|
@@ -159,3 +159,15 @@ Quantum state vectors are therefore unit vectors with respect to this norm.
 $$
 |+\rangle = \frac{1}{\sqrt{2}} |0\rangle + \frac{1}{\sqrt{2}} |1\rangle \quad \text{and} \quad |-\rangle = \frac{1}{\sqrt{2}} |0\rangle - \frac{1}{\sqrt{2}} |1\rangle
 $$
+### Standard Basis Measurements
+- Measurements provide a mechanism for extracting classical information from quantum systems.
+- The possible outcomes are the classical states.
+- The probability for each classical state to be the outcome is the absolute value squared of the corresponding quantum state vector entry.
+> For Example:
+> Measuring the quantum state $|+\rangle = \dfrac{1}{\sqrt{2}} |0\rangle + \dfrac{1}{\sqrt{2}} |1\rangle$ yields an outcome as follows:
+> Pr(outcome is 0) = $\dfrac{1}{2}$ and Pr(outcome is 1) = $\dfrac{1}{2}$.
+> 
+> Measuring the quantum state $|0\rangle$ gives the outcome 0 with certainty.
+> Measuring the quantum state $|1\rangle$ gives the outcome 1 with certainty.
+
+- Measuring a system changes its quantum state: if we obtain the classical state $a$, the new quantum state becomes $|a\rangle$. This is also referred to as the collapse of a quantum state.
