@@ -171,3 +171,42 @@ $$
 > Measuring the quantum state $|1\rangle$ gives the outcome 1 with certainty.
 
 - Measuring a system changes its quantum state: if we obtain the classical state $a$, the new quantum state becomes $|a\rangle$. This is also referred to as the collapse of a quantum state.
+### Unitary Operations
+- The set of allowable operations that can be performed on a quantum state is different than it is for classical information.
+- Operations on quantum state vectors are represented by unitary matrices.
+- A square matrix $u$ having complex number entries is unitary if it satisfies the equalities: $u^\dagger u = \mathbb{1} = u u^\dagger$ where $u^\dagger$ is the conjugate transpose of $u$ and $\mathbb{1}$ is the identity matrix.
+- Both equalities are equivalent to $u^{-1} = u^\dagger$.
+- The condition that an $n\times n$ matrix $u$ is unitary is equivalent to $\| u v \| = \| v \|$ for every $n$-dimensional column vector $v$ with complex number entries.
+- If $v$ is a quantum state vector, then $uv$ is also a quantum state vector.
+### Qubit Unitary Operations
+1. **Pauli Operations:** Pauli operations are ones represented by Pauli matrices:
+   $$
+   \mathbb{1} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix} \quad \sigma_x = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix} \quad \sigma_y = \begin{pmatrix} 0 & -i \\ i & 0 \end{pmatrix} \quad \sigma_z = \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}
+   $$
+   Common alternative notations: $X = \sigma_x, Y = \sigma_y, Z = \sigma_z$.
+   The operation $\sigma_x$ is also called a bit flip and the $\sigma_z$ is also called a phase flip:
+   $$
+	\begin{aligned} \sigma_x |0\rangle &= |1\rangle & \qquad \sigma_z |0\rangle &= |0\rangle \\ \sigma_x |1\rangle &= |0\rangle & \qquad \sigma_z |1\rangle &= -|1\rangle \end{aligned}
+	$$
+2. **Hadamard Operation:** The Hadamard operation is represented by this matrix:
+   $$
+   H = \begin{pmatrix} \dfrac{1}{\sqrt{2}} & \dfrac{1}{\sqrt{2}} \\ \dfrac{1}{\sqrt{2}} & -\dfrac{1}{\sqrt{2}} \end{pmatrix}
+   $$
+   $$
+   \begin{aligned}
+   H|0\rangle = |+\rangle & \qquad H|+\rangle = |0\rangle \\
+   H|1\rangle = |-\rangle & \qquad H|-\rangle = |1\rangle \\
+   \end{aligned}
+   $$
+3. **Phase Operations:** A phase operation is described by the matrix:
+   $$
+   P_\theta = \begin{pmatrix} 1 & 0 \\ 0 & e^{i\theta} \end{pmatrix}
+   $$
+   for any choice of a real number $\theta$.
+   The operations
+   $$
+   S = P_{\pi/2} = \begin{pmatrix} 1 & 0 \\ 0 & i \end{pmatrix} \quad \text{and} \quad T = P_{\pi/4} = \begin{pmatrix} 1 & 0 \\ 0 & \dfrac{1+i}{\sqrt{2}} \end{pmatrix}
+   $$
+   are important examples.
+   The composite operation $HSH$ is called the square root of not operation because $(HSH)^2 = \sigma_x$.
+---
