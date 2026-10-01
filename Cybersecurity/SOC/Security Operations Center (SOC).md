@@ -335,3 +335,19 @@ The SOC aims to maintain the ***CIA Triad: Confidentiality, Integrity, Availabil
 5. Contextual Examination: Consider broader context, recent or current incidents; look for patterns and assess scope.
 6. Defense Measures: Take reactive and proactive defense actions; communicate with users and stakeholders.
 7. Documentation & Reporting: Maintain records of finding, verdicts, and actions taken; close out alerts and tickets.
+#### Common Ports
+- 21: File Transfer Protocol ([[FTP]]): Transfer files between systems.
+- 22: Secure Shell ([[SSH]]): Often used for a secure remote cli.
+- 23: [[Telnet]]: Unencrypted remote cli. 
+- 25: Simple Mail Transfer Protocol ([[SMTP]]): Sending emails.
+- 53: Domain Name System ([[DNS]]): Translating domain names into IP addresses.
+- 80: HyperText Transfer Protocol ([[HTTP_HTTPS|HTTP]]): Data communication over the web.
+- 110: Post Office Protocol 3 ([[POP3]]): Retrieving emails from a remote server.
+- 135: Microsoft Remote Procedure Call ([[RPC]]): Microsoft inter-process communication.
+- 139: NetBIOS: Windows file and printer sharing.
+- 143: Internet Message Access Protocol ([[IMAP]]): Retrieving emails from a remote server.
+- 389: Lightweight Directory Access Protocol ([[LDAP]]): Centralized directory and auth service.
+- 443: HyperText Transfer Protocol ([[HTTP_HTTPS|HTTPS]]): HTTP with encrypted communications.
+- 445: Server Message Block ([[SMB]]): Network file and printer sharing.
+- 3389: Remote Desktop ([[RDP]]): Graphical interface to connect with a system.
+- 8080: HyperText Transfer Protocol (HTTP): Alternate or proxy for HTTP traffic.
